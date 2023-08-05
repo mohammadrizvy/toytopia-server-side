@@ -30,7 +30,10 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    
+
+
+
+    //!Gallery
 
     const galleryCollection = client.db("ToyTopia").collection("galleryImages")
 
@@ -40,6 +43,8 @@ async function run() {
         res.send(result);
     })
 
+    //!Catgory
+
     const categoryCollection = client.db("ToyTopia").collection("categories")
 
      app.get("/category", async (req, res) => {
@@ -47,6 +52,28 @@ async function run() {
        const result = await cursor.toArray();
        res.send(result);
      });
+
+     //!Most Popular
+
+    const mostPopularCollection = client.db("ToyTopia").collection("mostPopular")
+
+     app.get("/popular", async (req, res) => {
+       const cursor = mostPopularCollection.find();
+       const result = await cursor.toArray();
+       res.send(result);
+     });
+
+     //!AllToy 
+
+     const allToysCollection = client.db("ToyTopia").collection("allToys")
+
+     app.get("/alltoy", async (req, res) => {
+       const cursor = allToysCollection.find();
+       const result = await cursor.toArray();
+       res.send(result);
+     });
+
+
 
 
 
