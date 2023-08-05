@@ -30,6 +30,27 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const galleryCollection = client.db("ToyTopia").collection("galleryImages")
+
+    app.get("/gallery", async(req ,res ) => {
+        const cursor = galleryCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+
+    const categoryCollection = client.db("ToyTopia").collection("categories")
+
+     app.get("/category", async (req, res) => {
+       const cursor = categoryCollection.find();
+       const result = await cursor.toArray();
+       res.send(result);
+     });
+
+
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
