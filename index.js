@@ -69,6 +69,8 @@ async function run() {
       res.send(result);
     });
 
+    //!AllToy Details
+
     app.get("/alltoy/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -86,6 +88,67 @@ async function run() {
         },
       };
       const result = await allToysCollection.findOne(query,options);
+      res.send(result);
+    });
+
+
+    //!AddCoffe 
+
+    const newToysCollection = client.db("ToyTopia").collection("newToys")
+
+    app.post("/toys" , async (req , res) => {
+        const newToy = req.body;
+        const result = await newToysCollection.insertOne(newToy)
+        res.send(result);
+        console.log(newToy);
+    })
+
+    app.get("/toys" , async (req , res) => {
+        console.log(req.query.email);
+        let query = {};
+        if(req.query?.email){
+            query = {email:req.query.email}
+        }
+
+         const cursor = newToysCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.delete("/toys/:id" , async(req , res) => {
+         const id = req.params.id;
+         const query =  {_id : new ObjectId(id)}
+         const result = await newToysCollection.deleteOne(query)
+         res.send(result);
+    })
+
+    app.get("/toys/:id" , async(req,res) => {
+        const id = req.params.id;
+        const query = {_id : new ObjectId(id)}
+        const result = await newToysCollection.findOne(query);
+        res.send(result)
+    })
+
+
+    app.put("/updatetoy/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedToy = req.body;
+      const toy = {
+        $set: {
+          name: updatedToy.name,
+          price: updatedToy.price,
+          rating: updatedToy.rating,
+          quantity: updatedToy.quantity,
+          detailDescription: updatedToy.detailDescription,
+          sellerEmail: updatedToy.sellerEmail,
+          sellerName: updatedToy.sellerName,
+          subCategory: updatedToy.subCategory,
+          photo: updatedToy.photo,
+        },
+      };
+      const result = await newToysCollection.updateOne(filter, toy, options);
       res.send(result);
     });
 
